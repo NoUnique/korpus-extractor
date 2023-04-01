@@ -1,0 +1,45 @@
+{
+  "[dockercompose]": {
+    "editor.defaultFormatter": "ms-azuretools.vscode-docker"
+  },
+  "[dockerfile]": {
+    "editor.formatOnPaste": false,
+    "editor.formatOnSave": false
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[python]": {
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": true
+    },
+    "editor.defaultFormatter": "ms-python.black-formatter"
+  },
+  "[toml]": {
+    "editor.defaultFormatter": "tamasfe.even-better-toml"
+  },
+  "black-formatter.args": ["--config=pyproject.toml"],
+  "black-formatter.path": [".venv/bin/black"],
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  "editor.rulers": [80, 120],
+  "files.associations": {
+    "*.json": "jsonc"
+  },
+  "files.autoSave": "onFocusChange",
+  "files.trimTrailingWhitespace": true,
+  "flake8.args": ["--toml-config=pyproject.toml"],
+  "flake8.path": [".venv/bin/flake8"],
+  "git.autofetch": true,
+  "isort.args": ["--settings-path=pyproject.toml"],
+  "isort.path": [".venv/bin/isort"],
+  "pylint.args": ["--rcfile=pyproject.toml"],
+  "pylint.path": [".venv/bin/pylint"],
+  "python.defaultInterpreterPath": "/usr/local/bin/python",
+  "python.formatting.provider": "black",
+  "python.testing.pytestEnabled": true,
+  "python.testing.pytestPath": "./venv/bin/pytest",
+  "python.testing.unittestEnabled": false,
+  "terminal.integrated.defaultProfile.linux": "bash",
+  "workbench.colorTheme": "Default Dark+"
+}
