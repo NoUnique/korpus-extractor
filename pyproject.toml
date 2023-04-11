@@ -37,7 +37,7 @@ packages = [{ include = "korpus_extractor", from = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.8.1"
-typer = { version = "^0.4.0", extras = ["all"] }
+typer = { version = "^0.7.0", extras = ["all"] }
 rich = "^10.14.0"
 
 [tool.poetry.group.dev.dependencies]
