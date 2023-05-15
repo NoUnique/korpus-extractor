@@ -1,51 +1,53 @@
-# type: ignore[attr-defined]
-from typing import Optional
+from typing import Callable
+from typing_extensions import Annotated
 
-from enum import Enum
-from random import choice
+from functools import wraps
 
 import typer
+from merge_args import merge_args
 from rich.console import Console
 
 from korpus_extractor import version
-from korpus_extractor.example import hello
 
-
-class Color(str, Enum):
-    white = "white"
-    red = "red"
-    cyan = "cyan"
-    magenta = "magenta"
-    yellow = "yellow"
-    green = "green"
-
+from .aihub_extractor import AIHubExtractor
+from .modu_extractor import ModuExtractor
 
 app = typer.Typer(
     name="korpus-extractor",
     help="Extractor for obtaining sentences and paragraphs from compressed Korean corpora files.",
-    add_completion=False,
+    add_completion=True,
+    context_settings={"help_option_names": ["-h", "--help"]},
 )
 console = Console()
+
+
+# wrapper pattern for common arguments (https://github.com/tiangolo/typer/issues/296)
+def cmd_extractor(
+    func: Callable,
+) -> "wrapper":
+    @merge_args(func)
+    @wraps(func)
+    def wrapper(
+        ctx: typer.Context,
+        input_path: str = typer.Option(..., "-i", "--input", metavar="PATH", help="Input file or directory."),
+        output_path: str = typer.Option(..., "-o", "--output", metavar="PATH", help="Output file path."),
+        **kwargs,
+    ):
+        return func(ctx=ctx, **kwargs)
+
+    return wrapper
 
 
 def version_callback(print_version: bool) -> None:
     """Print the version of the package."""
     if print_version:
-        console.print(f"[yellow]korpus-extractor[/] version: [bold blue]{version}[/]")
+        console.print(f"[bold blue]korpus-extractor[/] version: [bold red]{version}[/]")
         raise typer.Exit()
 
 
-@app.command(name="")
-def main(
-    name: str = typer.Option(..., help="Person to greet."),
-    color: Optional[Color] = typer.Option(
-        None,
-        "-c",
-        "--color",
-        "--colour",
-        case_sensitive=False,
-        help="Color for print. If not specified then choice will be random.",
-    ),
+@app.callback(no_args_is_help=True)
+def callback(
+    ctx: typer.Context,
     print_version: bool = typer.Option(
         None,
         "-v",
@@ -55,12 +57,26 @@ def main(
         help="Prints the version of the korpus-extractor package.",
     ),
 ) -> None:
-    """Print a greeting with a giving name."""
-    if color is None:
-        color = choice(list(Color))
+    return
 
-    greeting: str = hello(name)
-    console.print(f"[bold {color}]{greeting}[/]")
+
+@app.command()
+@cmd_extractor
+def modu(ctx: typer.Context):
+    """Modu Corpus Extractor"""
+    kwargs = ctx.params
+    extractor = ModuExtractor()
+    extractor.extract(kwargs["input_path"], kwargs["output_path"])
+
+
+@app.command()
+@cmd_extractor
+def aihub(ctx: typer.Context) -> None:
+    """AI Hub Corpus Extractor"""
+    kwargs = ctx.params
+    extractor = AIHubExtractor()
+    print(kwargs)
+    extractor.extract(kwargs["input_path"], kwargs["output_path"])
 
 
 if __name__ == "__main__":

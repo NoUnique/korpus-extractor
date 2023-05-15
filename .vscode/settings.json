@@ -40,5 +40,7 @@
   "python.testing.pytestEnabled": true,
   "python.testing.pytestPath": "./.venv/bin/pytest",
   "python.testing.unittestEnabled": false,
-  "workbench.colorTheme": "Default Dark+"
+  "workbench.colorTheme": "Default Dark+",
+  "genieai.openai.model": "gpt-4",
+  "genieai.enableConversationHistory": true
 }
