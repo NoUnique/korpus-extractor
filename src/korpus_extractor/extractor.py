@@ -100,7 +100,8 @@ class ZippedJsonExtractor(Extractor):
             data_cls = msgspec.defstruct(class_name, [(field_name, field_cls, None)])
             self.msgspec_classes[item.depth] = data_cls
             if not item.field_name and item.field_type(str) == List[str]:
-                self.msgspec_classes[item.depth] = List[self.msgspec_classes[item.depth + 1]]
+                field_type = self.msgspec_classes.get(item.depth + 1, Optional[str])
+                self.msgspec_classes[item.depth] = List[field_type]
 
         for i in range(len(self.msgspec_classes)):
             print(self.msgspec_classes[i])

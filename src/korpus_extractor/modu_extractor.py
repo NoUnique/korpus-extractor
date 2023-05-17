@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 import collections
 import concurrent.futures
@@ -223,10 +223,14 @@ class ModuExtractor(ZippedJsonExtractor):
             )
             if filename in corpus_info["file_names"]:
                 return corpus_info
-        return None
+        raise ValueError(f"Corpus path {corpus_path} is not valid.")
 
     def extract(
-        self, corpus_path: str, output_path: str, num_workers: int = os.cpu_count(), max_memory_ratio: float = 0.5
+        self,
+        corpus_path: str,
+        output_path: str,
+        num_workers: Optional[int] = os.cpu_count(),
+        max_memory_ratio: float = 0.5,
     ):
         corpus_info = self._get_corpus_info_by_path(corpus_path)
         _filenames = self.read_filenames_in_zip(corpus_path, extension=corpus_info["file_format"])

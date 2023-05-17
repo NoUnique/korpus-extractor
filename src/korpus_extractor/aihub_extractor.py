@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 import collections
 import concurrent.futures
@@ -238,7 +238,11 @@ class AIHubExtractor(ZippedJsonExtractor):
         raise ValueError("corpus_path is not valid")
 
     def extract(
-        self, corpus_path: str, output_path: str, num_workers: int = os.cpu_count(), max_memory_ratio: float = 0.5
+        self,
+        corpus_path: str,
+        output_path: str,
+        num_workers: Optional[int] = os.cpu_count(),
+        max_memory_ratio: float = 0.5,
     ):
         def _read_msgspec_in_zipobj(zipobj, filename):
             data = []

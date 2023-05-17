@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Any, Callable
 from typing_extensions import Annotated
 
 from functools import wraps
@@ -24,7 +24,7 @@ console = Console()
 # wrapper pattern for common arguments (https://github.com/tiangolo/typer/issues/296)
 def cmd_extractor(
     func: Callable,
-) -> "wrapper":
+) -> Any:
     @merge_args(func)
     @wraps(func)
     def wrapper(
