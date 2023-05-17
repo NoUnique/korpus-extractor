@@ -60,7 +60,7 @@ def callback(
     return
 
 
-@app.command()
+@app.command(no_args_is_help=True)
 @cmd_extractor
 def modu(ctx: typer.Context):
     """Modu Corpus Extractor"""
@@ -69,13 +69,12 @@ def modu(ctx: typer.Context):
     extractor.extract(kwargs["input_path"], kwargs["output_path"])
 
 
-@app.command()
+@app.command(no_args_is_help=True)
 @cmd_extractor
 def aihub(ctx: typer.Context) -> None:
     """AI Hub Corpus Extractor"""
     kwargs = ctx.params
     extractor = AIHubExtractor()
-    print(kwargs)
     extractor.extract(kwargs["input_path"], kwargs["output_path"])
 
 
