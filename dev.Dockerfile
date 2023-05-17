@@ -97,7 +97,7 @@ RUN OVERLAY_ARCH=$(uname -m) \
 COPY .devcontainer/rootfs/ /
 
 # Install code-server (from linuxserver/docker-code-server)
-ARG CODE_RELEASE=4.11.0
+ARG CODE_RELEASE=4.12.0
 RUN echo "**** install runtime dependencies ****" \
  && apt-get update \
  && apt-get install --no-install-suggests -y \
@@ -156,6 +156,7 @@ RUN mkdir -p /etc/services.d/code-server \
     echo "--extensions-dir /home/${USER}/code-server/extensions \\"; \
     echo '--disable-telemetry \'; \
     echo '--auth "none" \'; \
+    echo "--app-name ${COMPOSE_IMAGE_NAME} \\"; \
     echo "/app/${COMPOSE_IMAGE_NAME}"; \
  } > /etc/services.d/code-server/run \
  && chmod +x /etc/services.d/code-server/run \
