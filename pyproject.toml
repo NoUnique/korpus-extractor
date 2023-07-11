@@ -41,7 +41,7 @@ typer = { version = "^0.9.0", extras = ["all"] }
 rich = "^13.3.5"
 
 [tool.poetry.group.dev.dependencies]
-black = { version = "^23.1.0", allow-prereleases = true }
+black = { version = "^23.7.0", allow-prereleases = true }
 isort = { version = "^5.12.0", extras = ["colors"] }
 bandit = "^1.7.5"
 darglint = "^1.8.1"
