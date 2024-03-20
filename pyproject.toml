@@ -39,10 +39,13 @@ packages = [{ include = "korpus_extractor", from = "src" }]
 python = "^3.8.1"
 typer = { version = "^0.9.0", extras = ["all"] }
 rich = "^13.3.5"
+msgspec = "^0.18.6"
+merge-args = "^0.1.5"
+typing-extensions = "^4.10.0"
 
 [tool.poetry.group.dev.dependencies]
-black = { version = "^23.1.0", allow-prereleases = true }
-isort = { version = "^5.12.0", extras = ["colors"] }
+black = {version = "^24.3.0", allow-prereleases = true}
+isort = {version = "^5.13.2", extras = ["colors"]}
 bandit = "^1.7.5"
 darglint = "^1.8.1"
 flake8 = "^6.0.0"

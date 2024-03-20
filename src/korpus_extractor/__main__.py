@@ -1,4 +1,4 @@
-from typing import Any, Callable
+from typing import Any, Callable, Literal
 from typing_extensions import Annotated
 
 from functools import wraps
@@ -31,6 +31,13 @@ def cmd_extractor(
         ctx: typer.Context,
         input_path: str = typer.Option(..., "-i", "--input", metavar="PATH", help="Input file or directory."),
         output_path: str = typer.Option(..., "-o", "--output", metavar="PATH", help="Output file path."),
+        type: Literal['sentence', 'document']= typer.Option(
+            "sentence",
+            "-t",
+            "--type",
+            metavar="TYPE",
+            help="Type of extraction (sentence or document).",
+        ),
         **kwargs,
     ):
         return func(ctx=ctx, **kwargs)
@@ -66,7 +73,7 @@ def modu(ctx: typer.Context):
     """Modu Corpus Extractor"""
     kwargs = ctx.params
     extractor = ModuExtractor()
-    extractor.extract(kwargs["input_path"], kwargs["output_path"])
+    extractor.extract(kwargs["input_path"], kwargs["output_path"], kwargs["type"])
 
 
 @app.command(no_args_is_help=True)
