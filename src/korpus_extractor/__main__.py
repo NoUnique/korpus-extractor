@@ -82,7 +82,7 @@ def aihub(ctx: typer.Context) -> None:
     """AI Hub Corpus Extractor"""
     kwargs = ctx.params
     extractor = AIHubExtractor()
-    extractor.extract(kwargs["input_path"], kwargs["output_path"])
+    extractor.extract(kwargs["input_path"], kwargs["output_path"], kwargs["type"])
 
 
 if __name__ == "__main__":
