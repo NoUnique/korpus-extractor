@@ -31,7 +31,7 @@ def cmd_extractor(
         ctx: typer.Context,
         input_path: str = typer.Option(..., "-i", "--input", metavar="PATH", help="Input file or directory."),
         output_path: str = typer.Option(..., "-o", "--output", metavar="PATH", help="Output file path."),
-        type: Literal['sentence', 'document']= typer.Option(
+        extraction_type: Literal["sentence", "document"] = typer.Option(
             "sentence",
             "-t",
             "--type",
@@ -73,7 +73,7 @@ def modu(ctx: typer.Context):
     """Modu Corpus Extractor"""
     kwargs = ctx.params
     extractor = ModuExtractor()
-    extractor.extract(kwargs["input_path"], kwargs["output_path"], kwargs["type"])
+    extractor.extract(kwargs.pop("input_path"), kwargs.pop("output_path"), **kwargs)
 
 
 @app.command(no_args_is_help=True)
@@ -82,7 +82,7 @@ def aihub(ctx: typer.Context) -> None:
     """AI Hub Corpus Extractor"""
     kwargs = ctx.params
     extractor = AIHubExtractor()
-    extractor.extract(kwargs["input_path"], kwargs["output_path"], kwargs["type"])
+    extractor.extract(kwargs.pop("input_path"), kwargs.pop("output_path"), **kwargs)
 
 
 if __name__ == "__main__":

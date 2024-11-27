@@ -213,7 +213,7 @@ _CORPUS_INFO = {
                         {
                             "text": "string",
                         }
-                    ]
+                    ],
                 }
             ]
         },
@@ -253,7 +253,7 @@ _CORPUS_INFO = {
                     "dialect_form": "string",
                     "speaker_id": "string",
                 }
-            ]
+            ],
         },
         "document_extraction": """
         speaker_ids = {speaker.id: idx for idx, speaker in enumerate(root.speaker, start=1)}
@@ -264,8 +264,8 @@ _CORPUS_INFO = {
         transformed_documents.append(transformed_document)
         """,
         "sentence_extraction": [
-            ".utterance[]|.standard_form"
-            ".utterance[]|.dialect_form"
+            ".utterance[]|.standard_form",
+            ".utterance[]|.dialect_form",
         ],
     },
     119: {  # 한국어 방언 발화(경상도)
@@ -290,7 +290,7 @@ _CORPUS_INFO = {
                     "dialect_form": "string",
                     "speaker_id": "string",
                 }
-            ]
+            ],
         },
         "document_extraction": """
         speaker_ids = {speaker.id: idx for idx, speaker in enumerate(root.speaker, start=1)}
@@ -301,8 +301,8 @@ _CORPUS_INFO = {
         transformed_documents.append(transformed_document)
         """,
         "sentence_extraction": [
-            ".utterance[]|.standard_form"
-            ".utterance[]|.dialect_form"
+            ".utterance[]|.standard_form",
+            ".utterance[]|.dialect_form",
         ],
     },
     120: {  # 한국어 방언 발화(전라도)
@@ -327,7 +327,7 @@ _CORPUS_INFO = {
                     "dialect_form": "string",
                     "speaker_id": "string",
                 }
-            ]
+            ],
         },
         "document_extraction": """
         speaker_ids = {speaker.id: idx for idx, speaker in enumerate(root.speaker, start=1)}
@@ -338,8 +338,8 @@ _CORPUS_INFO = {
         transformed_documents.append(transformed_document)
         """,
         "sentence_extraction": [
-            ".utterance[]|.standard_form"
-            ".utterance[]|.dialect_form"
+            ".utterance[]|.standard_form",
+            ".utterance[]|.dialect_form",
         ],
     },
     121: {  # 한국어 방언 발화(제주도)
@@ -364,7 +364,7 @@ _CORPUS_INFO = {
                     "dialect_form": "string",
                     "speaker_id": "string",
                 }
-            ]
+            ],
         },
         "document_extraction": """
         speaker_ids = {speaker.id: idx for idx, speaker in enumerate(root.speaker, start=1)}
@@ -375,8 +375,8 @@ _CORPUS_INFO = {
         transformed_documents.append(transformed_document)
         """,
         "sentence_extraction": [
-            ".utterance[]|.standard_form"
-            ".utterance[]|.dialect_form"
+            ".utterance[]|.standard_form",
+            ".utterance[]|.dialect_form",
         ],
     },
     122: {  # 한국어 방언 발화(충청도)
@@ -401,7 +401,7 @@ _CORPUS_INFO = {
                     "dialect_form": "string",
                     "speaker_id": "string",
                 }
-            ]
+            ],
         },
         "document_extraction": """
         speaker_ids = {speaker.id: idx for idx, speaker in enumerate(root.speaker, start=1)}
@@ -412,8 +412,8 @@ _CORPUS_INFO = {
         transformed_documents.append(transformed_document)
         """,
         "sentence_extraction": [
-            ".utterance[]|.standard_form"
-            ".utterance[]|.dialect_form"
+            ".utterance[]|.standard_form",
+            ".utterance[]|.dialect_form",
         ],
     },
     463: {  # 방송 콘텐츠 대화체 음성인식 데이터
@@ -458,9 +458,9 @@ _CORPUS_INFO = {
                         "title": "string",
                         "subtitle": "string",
                         "content": "string",
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         },
         "document_extraction": """
         for txt in root.SJML.text:
@@ -496,9 +496,9 @@ _CORPUS_INFO = {
                         {
                             "text": "string",
                         }
-                    ]
+                    ],
                 }
-            ]
+            ],
         },
         "document_extraction": """
         for paragraph in root.paragraphs:
@@ -559,10 +559,10 @@ class AIHubExtractor(ZippedJsonExtractor):
         self,
         corpus_path: str,
         output_path: str,
-        extraction_type: Literal['sentence', 'document'] = "sentence",
+        extraction_type: Literal["sentence", "document"] = "sentence",
         num_workers: Optional[int] = os.cpu_count(),
         max_memory_ratio: float = 0.5,
-        **kwargs
+        **kwargs,
     ):
         corpus_info = self._get_corpus_info_by_path(corpus_path)
         msgspec_class = self.create_msgspec_classes_from_dict(corpus_info["data_structure"])
@@ -577,7 +577,7 @@ class AIHubExtractor(ZippedJsonExtractor):
             try:
                 with zipobj.open(filename) as fj:
                     _data = msgspec.json.decode(fj.read(), type=msgspec_class)
-                    _data = _extract(_data, _direction)
+                    _data = _extract(_data, _direction, compressed_filename=filename)
                     data = _data
             except msgspec.ValidationError as e:
                 print(f"msgspec.ValidationError: {filename} in {zipobj.filename}")

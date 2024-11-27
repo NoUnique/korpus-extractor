@@ -65,9 +65,9 @@ _CORPUS_INFO = {
                         {
                             "form": "string",
                         }
-                    ]
+                    ],
                 }
-            ]
+            ],
         },
         "document_extraction": """
         for document in root.document:
@@ -154,9 +154,9 @@ _CORPUS_INFO = {
                         {
                             "form": "string",
                         }
-                    ]
+                    ],
                 }
-            ]
+            ],
         },
         "document_extraction": """
         for document in root.document:
@@ -260,9 +260,9 @@ _CORPUS_INFO = {
                             "form": "string",
                             "speaker_id": "string",
                         }
-                    ]
+                    ],
                 }
-            ]
+            ],
         },
         "document_extraction": """
         for document in root.document:
@@ -355,9 +355,9 @@ _CORPUS_INFO = {
                             "form": "string",
                             "speaker_id": "string",
                         }
-                    ]
+                    ],
                 }
-            ]
+            ],
         },
         "document_extraction": """
         for document in root.document:
@@ -708,7 +708,6 @@ class ModuExtractor(ZippedJsonExtractor):
                 percent = tasks_completed[0] / tasks_total * 100
                 line_end = "\n" if tasks_completed[0] in indexes else "\r"
                 print(f"{tasks_completed[0]:#5d} / {tasks_total} ( {percent:5.2f} %) completed", end=line_end)
-
 
         _filenames = self.read_filenames_in_zip(corpus_path, extension=corpus_info["file_format"])
         filenames = []

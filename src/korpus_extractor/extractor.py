@@ -1,10 +1,10 @@
-import json
-import textwrap
 from types import SimpleNamespace
 from typing import Any, Dict, List, Literal, Optional
 
+import json
 import os
 import re
+import textwrap
 import zipfile
 from abc import ABC, abstractmethod
 
@@ -14,12 +14,12 @@ import msgspec
 class Extractor(ABC):
     def __init__(self):
         self.function_map = {
-            'sentence': self.extract_sentences,
-            'document': self.extract_documents,
+            "sentence": self.extract_sentences,
+            "document": self.extract_documents,
         }
         self.direction_map = {
-            'sentence': 'sentence_extraction',
-            'document': 'document_extraction'
+            "sentence": "sentence_extraction",
+            "document": "document_extraction",
         }
 
     def create_msgspec_classes_from_dict(self, structure_dict: dict):
@@ -41,9 +41,10 @@ class Extractor(ABC):
                 else:
                     fields.append((key, type(value), None))
             return msgspec.defstruct(class_name, fields)
+
         return _create_msgspec_class_from_dict(structure_dict)
 
-    def extract_sentences(self, data: Any, directions: List[str]) -> List[Any]:
+    def extract_sentences(self, data: Any, directions: List[str], **kwargs) -> List[Any]:
         def _create_flatten_list_from_jq(jq_expression: str):
             props = jq_expression.strip().split(".")[1:]
             pairs = list(zip(props, props[1:]))
@@ -121,13 +122,15 @@ class Extractor(ABC):
             transformed_sentences.extend(_extract_sentences(data, flatten_list, 0))
         return transformed_sentences
 
-    def extract_documents(self, root: Any, direction: str) -> List[Any]:
+    def extract_documents(self, root: Any, direction: str, **kwargs) -> List[Any]:
         transformed_documents = []
         exec(textwrap.dedent(direction).strip(), globals(), locals())
         return [json.dumps(document, ensure_ascii=False) for document in transformed_documents]
 
     @abstractmethod
-    def extract(self, corpus_path: str, output_path: str, extraction_type: Literal['sentence, document']='sentence', **kwargs):
+    def extract(
+        self, corpus_path: str, output_path: str, extraction_type: Literal["sentence, document"] = "sentence", **kwargs
+    ):
         raise NotImplementedError
 
 
@@ -147,4 +150,3 @@ class ZippedJsonExtractor(Extractor):
         except Exception as e:
             print(e)
         return sorted(fileinfo)
-
