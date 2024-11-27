@@ -129,7 +129,11 @@ class Extractor(ABC):
 
     @abstractmethod
     def extract(
-        self, corpus_path: str, output_path: str, extraction_type: Literal["sentence, document"] = "sentence", **kwargs
+        self,
+        corpus_path: str,
+        output_path: str,
+        extraction_type: Literal["sentence", "document"] = "sentence",
+        **kwargs,
     ):
         raise NotImplementedError
 
