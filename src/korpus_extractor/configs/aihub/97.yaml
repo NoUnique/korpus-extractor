@@ -1,0 +1,12 @@
+# 문서요약 텍스트
+dir_name: 문서요약 텍스트
+compressed_format: zip
+file_patterns:
+  - Training/*.zip
+  - Validation/*.zip
+file_format: json
+file_encoding: utf-8
+sentence_extraction:
+  - .documents[]|.title
+  - .documents[]|.abstractive[]
+  - .documents[]|.text[]|.[]|.sentence

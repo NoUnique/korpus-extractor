@@ -1,0 +1,11 @@
+# 법률 지식베이스
+dir_name: 법률 지식베이스
+compressed_format: zip
+file_patterns:
+  - '**/*(Json).zip'
+file_format: json
+file_encoding: utf-8
+sentence_extraction:
+  - .documents[]|.title
+  - .documents[]|.abstractive[]
+  - .documents[]|.text[]|.[]|.sentence

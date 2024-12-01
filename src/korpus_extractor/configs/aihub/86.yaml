@@ -1,0 +1,9 @@
+# 감성 대화 말뭉치
+dir_name: 018.감성대화
+compressed_format: zip
+file_patterns:
+  - '**/라벨링데이터/*.zip'
+file_format: json
+file_encoding: utf-8
+sentence_extraction:
+  - .[]|.talk.content|.[]

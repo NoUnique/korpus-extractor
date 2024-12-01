@@ -1,0 +1,34 @@
+# 한국어 방언 발화(강원도)
+dir_name: 한국어 방언 발화(강원도)
+compressed_format: zip
+file_patterns:
+  - Training/[[]라벨[]]*.zip
+  - Validation/[[]라벨[]]*.zip
+file_format: json
+file_encoding: utf-8
+data_structure: |-
+  {
+      "speaker": [
+          {
+              "id": "string"
+          }
+      ],
+      "utterance": [
+          {
+              "form": "string",
+              "standard_form": "string",
+              "dialect_form": "string",
+              "speaker_id": "string"
+          }
+      ]
+  }
+document_extraction: |-
+  speaker_ids = {speaker.id: idx for idx, speaker in enumerate(root.speaker, start=1)}
+  document_content = ""
+  for utterance in root.utterance:
+      document_content += f"P{speaker_ids[utterance.speaker_id]}: {utterance.standard_form}\n"
+  transformed_document = {"text": document_content.strip()}
+  transformed_documents.append(transformed_document)
+sentence_extraction:
+  - .utterance[]|.standard_form
+  - .utterance[]|.dialect_form

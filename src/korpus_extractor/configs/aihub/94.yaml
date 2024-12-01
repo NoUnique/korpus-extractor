@@ -1,0 +1,9 @@
+# 명령어 음성(노인남녀)
+dir_name: 명령어 음성(노인남녀)
+compressed_format: zip
+file_patterns:
+  - '**/[[]라벨[]]*.zip'
+file_format: json
+file_encoding: utf-8
+sentence_extraction:
+  - .전사정보.LabelText

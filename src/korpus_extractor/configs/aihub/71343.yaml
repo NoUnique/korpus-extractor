@@ -1,0 +1,25 @@
+# SNS 데이터 고도화
+dir_name: 297.SNS 데이터 고도화
+compressed_format: zip
+file_patterns:
+  - 01-1.정식개방데이터/Training/01.원천데이터/*.zip
+  - 01-1.정식개방데이터/Validation/01.원천데이터/*.zip
+file_format: json
+file_encoding: utf-8
+data_structure: |-
+  {
+      "body": [
+          {
+              "participantID": "string",
+              "utterance": "string"
+          }
+      ]
+  }
+document_extraction: |-
+  document_content = ""
+  for body in root.body:
+      document_content += f"{body.participantID}:{body.utterance}\n"
+  transformed_document = {"text": document_content.strip()}
+  transformed_documents.append(transformed_document)
+sentence_extraction:
+  - .body[]|.utterance

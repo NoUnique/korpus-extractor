@@ -1,0 +1,32 @@
+# 전문분야 말뭉치
+dir_name: 전문분야 말뭉치
+compressed_format: zip
+file_patterns:
+  - Training/*.zip
+  - Validation/*.zip
+file_format: json
+file_encoding: utf-8
+data_structure: |-
+  {
+      "data": [
+          {
+              "title": "string",
+              "rows": [
+                  {
+                      "text": "string"
+                  }
+              ]
+          }
+      ]
+  }
+document_extraction: |-
+  for datum in root.data:
+      document_content = ""
+      if datum.title:
+          document_content += f"{datum.title}\n\n"
+      for row in datum.rows:
+          document_content += f"{row.text}\n"
+      transformed_document = {"text": document_content.strip()}
+      transformed_documents.append(transformed_document)
+sentence_extraction:
+  - .data[]|.rows[]|.text

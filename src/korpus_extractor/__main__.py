@@ -38,6 +38,13 @@ def cmd_extractor(
             metavar="TYPE",
             help="Type of extraction (sentence or document).",
         ),
+        config_name: str = typer.Option(
+            None,
+            "-c",
+            "--config",
+            metavar="NAME",
+            help="Name of the configuration file to use for extraction.",
+        ),
         **kwargs,
     ):
         return func(ctx=ctx, **kwargs)
@@ -81,7 +88,7 @@ def modu(ctx: typer.Context):
 def aihub(ctx: typer.Context) -> None:
     """AI Hub Corpus Extractor"""
     kwargs = ctx.params
-    extractor = AIHubExtractor()
+    extractor = AIHubExtractor(config=kwargs.get("config_name", None))
     extractor.extract(kwargs.pop("input_path"), kwargs.pop("output_path"), **kwargs)
 
 

@@ -1,0 +1,35 @@
+# 대규모 웹데이터 기반 한국어 말뭉치 데이터
+dir_name: 030.웹데이터 기반 한국어 말뭉치 데이터
+compressed_format: zip
+file_patterns:
+  - 01.데이터/1.Training/원천데이터/*.zip
+  - 01.데이터/2.Validation/원천데이터/*.zip
+file_format: json
+file_encoding: utf-8
+data_structure: |-
+  {
+      "SJML": {
+          "text": [
+              {
+                  "title": "string",
+                  "subtitle": "string",
+                  "content": "string"
+              }
+          ]
+      }
+  }
+document_extraction: |-
+  for txt in root.SJML.text:
+      document_content = ""
+      if txt.title.strip():
+          document_content += f"{txt.title}\n\n"
+      if txt.subtitle.strip():
+          document_content += f"{txt.subtitle}\n\n"
+      if txt.content.strip():
+          document_content += f"{txt.content}\n"
+      transformed_document = {"text": document_content.strip()}
+      transformed_documents.append(transformed_document)
+sentence_extraction:
+  - .SJML.text[]|.title
+  - .SJML.text[]|.subtitle
+  - .SJML.text[]|.content

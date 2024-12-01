@@ -1,0 +1,12 @@
+# 도서자료 요약
+dir_name: 도서자료 요약
+compressed_format: zip
+file_patterns:
+  - '**/*.zip'
+file_format: json
+file_encoding: utf-8
+sentence_extraction:
+  - .metadata.doc_name
+  - .chapter
+  - .passage
+  - .summary

@@ -1,9 +1,10 @@
 from types import SimpleNamespace
 from typing import Any, Dict, List, Literal, Optional
 
-import json
 import os
 import re
+import json
+import yaml
 import textwrap
 import zipfile
 from abc import ABC, abstractmethod
@@ -21,6 +22,20 @@ class Extractor(ABC):
             "sentence": "sentence_extraction",
             "document": "document_extraction",
         }
+
+    def _load_config(self, config_path):
+        config = {}
+        try:
+            with open(config_path, "r", encoding="utf-8") as f:
+                config = yaml.safe_load(f)
+            if "data_structure" in config:
+                print(config["data_structure"])
+                config["data_structure"] = json.loads(config["data_structure"])
+        except FileNotFoundError:
+            raise FileNotFoundError(f"File not found: {config_path}")
+        except Exception as e:
+            raise e
+        return config
 
     def create_msgspec_classes_from_dict(self, structure_dict: dict):
         def _create_msgspec_class_from_dict(dict_obj, class_name="Root"):

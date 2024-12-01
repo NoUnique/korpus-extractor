@@ -1,0 +1,9 @@
+# 고객 응대 음성
+dir_name: 고객 응대 음성
+compressed_format: zip
+file_patterns:
+  - '**/[[]라벨[]]*.zip'
+file_format: txt
+file_encoding: utf-8
+sentence_extraction:
+  - .[]

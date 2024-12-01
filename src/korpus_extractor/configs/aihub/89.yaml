@@ -1,0 +1,11 @@
+# 기계독해
+dir_name: 기계독해
+compressed_format: zip
+file_patterns:
+  - '**/*.zip'
+file_format: json
+file_encoding: utf-8
+sentence_extraction:
+  - .data[]|.paragraphs[]|.context
+  - .data[]|.paragraphs[]|.qas[]|.question
+  - .data[]|.paragraphs[]|.qas[]|.answers[]|.text

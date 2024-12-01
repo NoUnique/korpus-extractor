@@ -1,0 +1,13 @@
+# 논문자료 요약
+dir_name: 논문자료 요약
+compressed_format: zip
+file_patterns:
+  - '**/*.zip'
+file_format: json
+file_encoding: utf-8
+sentence_extraction:
+  - .data[]|.title
+  - .data[]|.summary_entire[]|.original_text
+  - .data[]|.summary_entire[]|.summary_text
+  - .data[]|.summary_section[]|.original_text
+  - .data[]|.summary_section[]|.summary_text
