@@ -66,7 +66,10 @@ class AIHubExtractor(ZippedJsonExtractor):
             data = []
             try:
                 with zipobj.open(filename) as fj:
-                    _data = msgspec.json.decode(fj.read(), type=msgspec_class)
+                    decoded_data = fj.read()
+                    if corpus_info["file_encoding"] != "utf-8":
+                        decoded_data = decoded_data.decode(corpus_info["file_encoding"])
+                    _data = msgspec.json.decode(decoded_data, type=msgspec_class)
                     _data = _extract(_data, _direction, compressed_filename=filename)
                     data = _data
             except msgspec.ValidationError as e:
