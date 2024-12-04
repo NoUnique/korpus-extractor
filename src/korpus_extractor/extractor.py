@@ -44,17 +44,22 @@ class Extractor(ABC):
                 if isinstance(value, dict):
                     # handle recursively nested dictionary
                     field_class = _create_msgspec_class_from_dict(value, class_name=key.capitalize())
-                    fields.append((key, field_class, None))
-                elif isinstance(value, list) and value:
-                    # estimate the type of list items
-                    elem = value[0]
-                    if isinstance(elem, dict):
-                        field_class = _create_msgspec_class_from_dict(elem, class_name=key.capitalize())
-                        fields.append((key, List[field_class], None))
+                    fields.append((key, Optional[field_class], None))
+                elif isinstance(value, list):
+                    if value:
+                        # estimate the type of list items
+                        elem = value[0]
+                        if isinstance(elem, dict):
+                            field_class = _create_msgspec_class_from_dict(elem, class_name=key.capitalize())
+                            fields.append((key, Optional[List[field_class]], None))
+                        else:
+                            fields.append((key, Optional[List[type(elem)]], None))
                     else:
-                        fields.append((key, List[type(elem)], None))
+                        fields.append((key, Optional[List], None))
+                elif value is None:
+                    fields.append((key, Optional[Any], None))
                 else:
-                    fields.append((key, type(value), None))
+                    fields.append((key, Optional[type(value)], None))
             return msgspec.defstruct(class_name, fields)
 
         return _create_msgspec_class_from_dict(structure_dict)
