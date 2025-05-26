@@ -1,0 +1,34 @@
+file_names:
+  - NIKL_OPM_2022_v1.0_JSON
+compressed_format: zip
+file_prefixes:
+  - EPRW
+  - ESRW
+file_format: json
+file_encoding: utf-8
+data_structure: |-
+  {
+      "document": [
+          {
+              "metadata": {
+                  "title": "string"
+              },
+              "paragraph": [
+                  {
+                      "form": "string"
+                  }
+              ]
+          }
+      ]
+  }
+document_extraction: |-
+  for document in root.document:
+      document_content = ""
+      if document.metadata.title:
+          document_content += f'{document.metadata.title}\n\n'
+      for paragraph in document.paragraph:
+          document_content += f'{paragraph.form}\n'
+      transformed_document = {"text": document_content.strip()}
+      transformed_documents.append(transformed_document)
+sentence_extraction:
+  - .document[]|.paragraph[]|.form

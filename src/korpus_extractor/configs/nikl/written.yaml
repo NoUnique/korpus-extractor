@@ -1,0 +1,39 @@
+file_names:
+  - NIKL_WRITTEN_v1.0
+  - NIKL_WRITTEN_v1.1
+  - NIKL_WRITTEN_v1.2
+  - NIKL_WRITTEN_v1.2_JSON
+compressed_format: zip
+file_prefixes:
+  - WARW
+  - WBRW
+  - WCRW
+  - WZRW
+file_format: json
+file_encoding: utf-8
+data_structure: |-
+  {
+      "document": [
+          {
+              "metadata": {
+                  "title": "string"
+              },
+              "paragraph": [
+                  {
+                      "form": "string"
+                  }
+              ]
+          }
+      ]
+  }
+document_extraction: |-
+  for document in root.document:
+      document_content = ""
+      if document.metadata.title:
+          document_content += f'{document.metadata.title}\n\n'
+      for paragraph in document.paragraph:
+          document_content += f'{paragraph.form}\n'
+      transformed_document = {"text": document_content.strip()}
+      transformed_documents.append(transformed_document)
+sentence_extraction:
+  - .document[]|.paragraph[]|.form

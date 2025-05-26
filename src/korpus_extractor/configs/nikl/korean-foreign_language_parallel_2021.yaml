@@ -1,0 +1,41 @@
+file_names:
+  - NIKL_PA_2021_v1.0
+  - NIKL_PA_2021_KOVI_v1.0_JSON
+  - NIKL_PA_2021_KOID_v1.0_JSON
+  - NIKL_PA_2021_KOTH_v1.0_JSON
+  - NIKL_PA_2021_KOHI_v1.0_JSON
+  - NIKL_PA_2021_KOKM_v1.0_JSON
+  - NIKL_PA_2021_KOTL_v1.0_JSON
+  - NIKL_PA_2021_KORU_v1.0_JSON
+  - NIKL_PA_2021_KOUZ_v1.0_JSON
+compressed_format: zip
+file_prefixes:
+  - NIORPAKO
+  - WZORPAKO
+  - SEORPAKO
+  - SDORPAKO
+file_format: json
+file_encoding: utf-8
+data_structure: |-
+  {
+      "language_info": {
+          "source_language": "string",
+          "target_language": "string"
+      },
+      "parallel": [
+          {
+              "source": "string",
+              "target": "string",
+              "revision": {
+                  "revision1": "string",
+                  "revision2": "string"
+              }
+          }
+      ]
+  }
+document_extraction: |-
+  for parallel in root.parallel:
+      transformed_document = {"text": parallel.source.strip()}
+      transformed_documents.append(transformed_document)
+sentence_extraction:
+  - .parallel[]|.source

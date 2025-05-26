@@ -1,0 +1,66 @@
+file_names:
+  - NIKL_OM_2021_v1.0
+  - NIKL_OM_2021_v1.1_JSON
+compressed_format: zip
+file_prefixes:
+  - MDRW
+  - MMRW
+file_format: json
+file_encoding: utf-8
+data_structure: |-
+  {
+      "document": [
+          {
+              "metadata": {
+                  "speaker": [
+                      {
+                          "id": "string"
+                      }
+                  ]
+              },
+              "utterance": [
+                  {
+                      "form": "string",
+                      "speaker_id": "string"
+                  }
+              ]
+          }
+      ]
+  }
+document_extraction: |-
+  for document in root.document:
+      speaker_ids = {speaker.id: idx for idx, speaker in enumerate(document.metadata.speaker, start=1)}
+      document_content = ""
+      for utterance in document.utterance:
+          document_content += f'P{speaker_ids[utterance.speaker_id]}: {utterance.form}\n'
+      transformed_document = {"text": document_content.strip()}
+      transformed_documents.append(transformed_document)
+sentence_extraction:
+  - .document[]|.utterance[]|.form
+special_tags:
+  - "{emoji}"
+  - "{system: gift}"
+  - "{system: call}"
+  - "{system: money}"
+  - "{system: notice}"
+  - "{system: map}"
+  - "{system: contact}"
+  - "{system: delete}"
+  - "{share:photo}"
+  - "{share:video}"
+  - "{share:music}"
+  - "{share:file}"
+  - "{share:voice}"
+  - "{share:info}"
+  - "{share:url}"
+  - "{censored}"
+deidentified_tags:
+  - "&name&"
+  - "&account&"
+  - "&social-security-num&"
+  - "&tel-num&"
+  - "&card-num&"
+  - "&num&"
+  - "&address&"
+  - "&affiliation&"
+  - "&others&"

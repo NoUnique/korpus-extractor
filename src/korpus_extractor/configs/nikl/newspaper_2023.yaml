@@ -1,0 +1,35 @@
+file_names:
+  - NIKL_NEWSPAPER_2023_JSON_v1.0
+compressed_format: zip
+file_prefixes:
+  - NWRW
+  - NLRW
+  - NPRW
+  - NIRW
+  - NZRW
+file_format: json
+file_encoding: utf-8
+data_structure: |-
+  {
+      "document": [
+          {
+              "paragraph": [
+                  {
+                      "form": "string"
+                  }
+              ]
+          }
+      ]
+  }
+document_extraction: |-
+  for document in root.document:
+      document_content = ""
+      for i, paragraph in enumerate(document.paragraph):
+          if i == 0:  # title
+              document_content += f'{paragraph.form}\n\n'
+          else:
+              document_content += f'{paragraph.form}\n'
+      transformed_document = {"text": document_content.strip()}
+      transformed_documents.append(transformed_document)
+sentence_extraction:
+  - .document[]|.paragraph[]|.form

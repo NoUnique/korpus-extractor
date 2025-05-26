@@ -1,0 +1,23 @@
+file_names:
+  - NIKL_KParlty_2021_v1.0
+compressed_format: zip
+file_prefixes:
+  - SBRW
+file_format: json
+file_encoding: utf-8
+data_structure: |-
+  {
+      "document": {
+          "utterance": [
+              {
+                  "form": "string"
+              }
+          ]
+      }
+  }
+document_extraction: |-
+  for utterance in root.document.utterance:
+      transformed_document = {"text": utterance.form.strip()}
+      transformed_documents.append(transformed_document)
+sentence_extraction:
+  - .document.utterance[]|.form

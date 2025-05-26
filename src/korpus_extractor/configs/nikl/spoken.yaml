@@ -1,0 +1,38 @@
+file_names:
+  - NIKL_SPOKEN_v1.1
+  - NIKL_SPOKEN_v1.2
+  - NIKL_SPOKEN_v1.2_JSON
+compressed_format: zip
+file_prefixes:
+  - SARW
+  - SBRW
+  - SERW
+file_format: json
+file_encoding: utf-8
+data_structure: |-
+  {
+      "document": [
+          {
+              "metadata": {
+                  "topic": "string"
+              },
+              "utterance": [
+                  {
+                      "form": "string",
+                      "speaker_id": "string"
+                  }
+              ]
+          }
+      ]
+  }
+document_extraction: |-
+  for document in root.document:
+      document_content = ""
+      if document.metadata.topic and document.metadata.topic.strip() != "NA":
+          document_content += f'{document.metadata.topic}\n\n'
+      for utterance in document.utterance:
+          document_content += f'{utterance.speaker_id}: {utterance.form}\n'
+      transformed_document = {"text": document_content.strip()}
+      transformed_documents.append(transformed_document)
+sentence_extraction:
+  - .document[]|.utterance[]|.form
