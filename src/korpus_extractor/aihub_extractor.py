@@ -14,26 +14,33 @@ import psutil
 
 from .extractor import ZippedJsonExtractor
 
-# keys are parameter 'dataSetSn' of aihub.or.kr/aihubdata/data/view.do
-_CORPUS_KEYS = [86, 89, 90, 92, 93, 94, 95, 96, 97, 99, 110, 118, 119, 120, 121, 122, 463, 464, 624, 653, 71343]
-
 
 class AIHubExtractor(ZippedJsonExtractor):
     def __init__(self, config=None):
-        if config and os.path.exists(config):
-            self.corpus_info = {config: self._load_config(config)}
-        else:
-            default_config_path = os.path.join(
-                os.path.dirname(os.path.abspath(__file__)), "configs", "aihub", f"{config}.yaml"
-            )
-            if os.path.exists(default_config_path):
-                self.corpus_info = {config: self._load_config(default_config_path)}
+        if config:
+            if os.path.exists(config):
+                self.corpus_info = {config: self._load_config(config)}
             else:
-                for config in _CORPUS_KEYS:
-                    config_path = os.path.join(
-                        os.path.dirname(os.path.abspath(__file__)), "configs", "aihub", f"{config}.yaml"
-                    )
-                    self.corpus_info[config] = self._load_config(config_path)
+                # config is dataSetSn parameter of aihub.or.kr/aihubdata/data/view.do
+                default_config_path = os.path.join(
+                    os.path.dirname(os.path.abspath(__file__)), "configs", "aihub", f"{config}.yaml"
+                )
+                if os.path.exists(default_config_path):
+                    self.corpus_info = {config: self._load_config(default_config_path)}
+                else:
+                    raise FileNotFoundError(f"Config file not found: {default_config_path}")
+        else:
+            self.corpus_info = {}
+            config_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "configs", "aihub")
+            for yaml_file in os.listdir(config_dir):
+                if yaml_file.endswith(".yaml"):
+                    # filename (without .yaml) is dataSetSn parameter of aihub.or.kr/aihubdata/data/view.do
+                    config_name = yaml_file[:-5]
+                    config_path = os.path.join(config_dir, yaml_file)
+                    try:
+                        self.corpus_info[config_name] = self._load_config(config_path)
+                    except Exception as e:
+                        print(f"Error loading {config_path}: {e}")
         super().__init__()
 
     def _get_corpus_info_by_path(self, corpus_path: str) -> dict:
@@ -43,7 +50,7 @@ class AIHubExtractor(ZippedJsonExtractor):
             corpus_path = os.path.normpath(corpus_path)
             if os.path.basename(corpus_path) == corpus_info["dir_name"]:
                 return corpus_info
-        raise ValueError("corpus_path is not valid")
+        raise ValueError(f"corpus_path '{corpus_path}' is not valid. No matching configuration found.")
 
     def extract(
         self,
@@ -146,3 +153,5 @@ class AIHubExtractor(ZippedJsonExtractor):
                             lines = [line for line in queue.popleft().result() if line]
                             fo.writelines(itertools.chain.from_iterable(zip(lines, line_sep)))
                             fo.flush()
+
+        print(f"Extraction complete. Output saved to {output_path}")
