@@ -112,6 +112,10 @@ class AIHubExtractor(ZippedJsonExtractor):
                     end=line_end,
                 )
 
+        output_dir = os.path.dirname(output_path)
+        if output_dir and not os.path.exists(output_dir):
+            os.makedirs(output_dir, exist_ok=True)
+
         with open(output_path, "w", encoding="utf-8") as fo:
             print(f"Extracting {msgspec_class} from {corpus_path}...")
 

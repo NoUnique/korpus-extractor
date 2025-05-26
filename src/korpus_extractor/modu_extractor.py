@@ -120,6 +120,10 @@ class ModuExtractor(ZippedJsonExtractor):
 
         _callback = functools.partial(_progress_callback, lock, tasks_completed, tasks_total)
 
+        output_dir = os.path.dirname(output_path)
+        if output_dir and not os.path.exists(output_dir):
+            os.makedirs(output_dir, exist_ok=True)
+
         with open(corpus_path, "rb") as fi, open(output_path, "w", encoding="utf-8") as fo:
             print(f"Extracting {msgspec_class} from {corpus_path}...")
 
