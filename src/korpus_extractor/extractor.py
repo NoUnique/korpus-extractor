@@ -1,15 +1,15 @@
 from types import SimpleNamespace
 from typing import Any, Dict, List, Literal, Optional
 
+import json
 import os
 import re
-import json
-import yaml
 import textwrap
 import zipfile
 from abc import ABC, abstractmethod
 
 import msgspec
+import yaml
 
 
 class Extractor(ABC):
@@ -26,7 +26,7 @@ class Extractor(ABC):
     def _load_config(self, config_path):
         config = {}
         try:
-            with open(config_path, "r", encoding="utf-8") as f:
+            with open(config_path, encoding="utf-8") as f:
                 config = yaml.safe_load(f)
             if "data_structure" in config:
                 print(config["data_structure"])
