@@ -41,25 +41,36 @@ class Extractor(ABC):
         def _create_msgspec_class_from_dict(dict_obj, class_name="Root"):
             fields = []
             for key, value in dict_obj.items():
+                # Convert invalid field names that start with digits
+                field_name = key
+                if key and key[0].isdigit():
+                    field_name = f"_{key}"
+                
                 if isinstance(value, dict):
                     # handle recursively nested dictionary
                     field_class = _create_msgspec_class_from_dict(value, class_name=key.capitalize())
-                    fields.append((key, Optional[field_class], None))
+                    fields.append((field_name, Optional[field_class], None))
                 elif isinstance(value, list):
                     if value:
                         # estimate the type of list items
                         elem = value[0]
                         if isinstance(elem, dict):
                             field_class = _create_msgspec_class_from_dict(elem, class_name=key.capitalize())
-                            fields.append((key, Optional[List[field_class]], None))
+                            fields.append((field_name, Optional[List[field_class]], None))
                         else:
-                            fields.append((key, Optional[List[type(elem)]], None))
+                            if isinstance(elem, str):
+                                fields.append((field_name, Optional[List[str]], None))
+                            else:
+                                fields.append((field_name, Optional[List[type(elem)]], None))
                     else:
-                        fields.append((key, Optional[List], None))
+                        fields.append((field_name, Optional[List], None))
                 elif value is None:
-                    fields.append((key, Optional[Any], None))
+                    fields.append((field_name, Optional[Any], None))
                 else:
-                    fields.append((key, Optional[type(value)], None))
+                    if isinstance(value, str):
+                        fields.append((field_name, Optional[str], None))
+                    else:
+                        fields.append((field_name, Optional[type(value)], None))
             return msgspec.defstruct(class_name, fields)
 
         return _create_msgspec_class_from_dict(structure_dict)
