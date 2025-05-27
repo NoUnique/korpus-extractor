@@ -37,6 +37,36 @@ class Extractor(ABC):
             raise e
         return config
 
+    def parse_size_limit(self, size_str: str) -> int:
+        """Parse size string like '256m', '1g' to bytes"""
+        if not size_str:
+            return 256 * 1024 * 1024  # default 256MB
+        
+        size_str = size_str.lower().strip()
+        match = re.match(r'^(\d+(?:\.\d+)?)\s*([kmgt]?)b?$', size_str)
+        if not match:
+            raise ValueError(f"Invalid size format: {size_str}")
+        
+        number, unit = match.groups()
+        number = float(number)
+        
+        units = {'': 1, 'k': 1024, 'm': 1024**2, 'g': 1024**3, 't': 1024**4}
+        return int(number * units.get(unit, 1))
+
+    def get_split_file_path(self, output_path: str, index: int) -> str:
+        """Generate split file path with index"""
+        dir_path = os.path.dirname(output_path)
+        base_name = os.path.basename(output_path)
+        name_without_ext = os.path.splitext(base_name)[0]
+        ext = os.path.splitext(base_name)[1]
+        
+        # Create subdirectory with base name
+        split_dir = os.path.join(dir_path, name_without_ext)
+        if not os.path.exists(split_dir):
+            os.makedirs(split_dir, exist_ok=True)
+        
+        return os.path.join(split_dir, f"{name_without_ext}-{index:05d}{ext}")
+
     def create_msgspec_classes_from_dict(self, structure_dict: dict):
         def _create_msgspec_class_from_dict(dict_obj, class_name="Root"):
             fields = []

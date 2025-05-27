@@ -45,6 +45,12 @@ def cmd_extractor(
             metavar="NAME",
             help="Name of the configuration file to use for extraction.",
         ),
+        size_limit: str = typer.Option(
+            None,
+            "--size-limit",
+            metavar="SIZE",
+            help="Maximum file size (e.g., 256m, 1g). If set, splits output into multiple files.",
+        ),
         **kwargs,
     ):
         return func(ctx=ctx, **kwargs)

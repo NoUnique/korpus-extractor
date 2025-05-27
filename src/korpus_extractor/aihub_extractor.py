@@ -59,6 +59,7 @@ class AIHubExtractor(ZippedJsonExtractor):
         extraction_type: Literal["sentence", "document"] = "sentence",
         num_workers: Optional[int] = os.cpu_count(),
         max_memory_ratio: float = 0.5,
+        size_limit: Optional[str] = None,
         **kwargs,
     ):
         corpus_info = self._get_corpus_info_by_path(corpus_path)
@@ -112,11 +113,23 @@ class AIHubExtractor(ZippedJsonExtractor):
                     end=line_end,
                 )
 
-        output_dir = os.path.dirname(output_path)
-        if output_dir and not os.path.exists(output_dir):
-            os.makedirs(output_dir, exist_ok=True)
+        # Parse size limit
+        max_file_size = self.parse_size_limit(size_limit) if size_limit else None
+        
+        if max_file_size:
+            # Split file mode
+            current_file_index = 1
+            current_file_size = 0
+            current_output_path = self.get_split_file_path(output_path, current_file_index)
+            fo = open(current_output_path, "w", encoding="utf-8")
+        else:
+            # Single file mode
+            output_dir = os.path.dirname(output_path)
+            if output_dir and not os.path.exists(output_dir):
+                os.makedirs(output_dir, exist_ok=True)
+            fo = open(output_path, "w", encoding="utf-8")
 
-        with open(output_path, "w", encoding="utf-8") as fo:
+        try:
             print(f"Extracting {msgspec_class} from {corpus_path}...")
 
             zipfile_paths = []
@@ -150,12 +163,46 @@ class AIHubExtractor(ZippedJsonExtractor):
                                     break
                                 if queue[0].done():
                                     lines = [line for line in queue.popleft().result() if line]
-                                    fo.writelines(itertools.chain.from_iterable(zip(lines, line_sep)))
+                                    for line in lines:
+                                        line_with_sep = line + "\n"
+                                        line_bytes = len(line_with_sep.encode('utf-8'))
+                                        
+                                        if max_file_size and current_file_size + line_bytes > max_file_size:
+                                            # Close current file and open new one
+                                            fo.close()
+                                            current_file_index += 1
+                                            current_file_size = 0
+                                            current_output_path = self.get_split_file_path(output_path, current_file_index)
+                                            fo = open(current_output_path, "w", encoding="utf-8")
+                                        
+                                        fo.write(line_with_sep)
+                                        if max_file_size:
+                                            current_file_size += line_bytes
                                     fo.flush()
                     while len(queue) > 0:
                         if queue[0].done():
                             lines = [line for line in queue.popleft().result() if line]
-                            fo.writelines(itertools.chain.from_iterable(zip(lines, line_sep)))
+                            for line in lines:
+                                line_with_sep = line + "\n"
+                                line_bytes = len(line_with_sep.encode('utf-8'))
+                                
+                                if max_file_size and current_file_size + line_bytes > max_file_size:
+                                    # Close current file and open new one
+                                    fo.close()
+                                    current_file_index += 1
+                                    current_file_size = 0
+                                    current_output_path = self.get_split_file_path(output_path, current_file_index)
+                                    fo = open(current_output_path, "w", encoding="utf-8")
+                                
+                                fo.write(line_with_sep)
+                                if max_file_size:
+                                    current_file_size += line_bytes
                             fo.flush()
 
-        print(f"Extraction complete. Output saved to {output_path}")
+        finally:
+            fo.close()
+
+        if max_file_size:
+            print(f"Extraction complete. Output saved to {os.path.dirname(self.get_split_file_path(output_path, 1))} ({current_file_index} files)")
+        else:
+            print(f"Extraction complete. Output saved to {output_path}")
